@@ -115,4 +115,10 @@ class DocumentController extends Controller
 
         return redirect()->route('documents.search')->with('success', 'Documento excluído com sucesso');
     }
+
+    public function show($id)
+    {
+        $document = Document::findOrFail($id);
+        return view('show', compact('document'));
+    }
 }

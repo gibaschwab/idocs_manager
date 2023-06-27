@@ -67,6 +67,8 @@ Route::get('/documents/search', [DocumentSearchController::class, 'search'])->na
 
 Route::delete('/documents/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy');
 
+Route::get('/{id}', [DocumentController::class, 'show'])->name('documents.show');
+
 
 // Route::get('/', function () {
 //     return view('welcome');

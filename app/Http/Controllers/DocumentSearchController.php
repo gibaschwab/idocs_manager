@@ -16,8 +16,7 @@ class DocumentSearchController extends Controller
         $endDate = $request->input('end_date');
 
         $documents = Document::when($search, function ($query) use ($search) {
-            $query->where('title', 'like', "%$search%")
-                ->orWhere('description', 'like', "%$search%");
+            $query->where('filename', 'like', "%$search%");
         })
             ->when($userId, function ($query) use ($userId) {
                 $query->where('user_id', $userId);

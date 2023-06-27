@@ -31,13 +31,25 @@ class Document extends Model
         return $this->hasMany(DocumentPermission::class);
     }
 
-    public function canDelete2()
-    {
-        return $this->user_id == auth()->id() || $this->permissions->contains('can_delete', true);
-    }
-
     public function canDelete()
     {
         return $this->user_id == auth()->id() || $this->permissions->where('user_id', auth()->id())->contains('can_delete', true);
+    }
+
+    public function canView()
+    {
+        $user = auth()->user();
+
+        // Verifica se o usuário é o proprietário do documento
+        if ($user && $this->user_id === $user->id) {
+            return true;
+        }
+
+        // Verifica se o usuário tem a permissão can_view nas permissões do documento
+        if ($user && $this->permissions->where('user_id', $user->id)->contains('can_view', true)) {
+            return true;
+        }
+
+        return false;
     }
 }
