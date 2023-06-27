@@ -86,7 +86,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-3">
-                            <a href="{{ route('document.create') }}" class="btn btn-primary">Novo Documento</a>
+                            <a href="{{ route('newdocument.create') }}" class="btn btn-primary">Novo documento</a>
                         </div>
                         <h5 class="card-title fw-semibold mb-4">Edição de Documento</h5>
                         <div class="table-responsive">

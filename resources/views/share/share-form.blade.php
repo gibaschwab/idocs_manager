@@ -85,38 +85,55 @@
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title fw-semibold mb-4">Upload de Documento</h5>
-                        <div class="table-responsive">
-                            <table class="table text-nowrap mb-0 align-middle">
-                                <thead class="text-dark fs-4">
-                                    <tr>
-                                        <th class="border-bottom-0">
-                                            <h6 class="fw-semibold mb-0">ID</h6>
-                                        </th>
-                                        <th class="border-bottom-0">
-                                            <h6 class="fw-semibold mb-0">Nome do Documento</h6>
-                                        </th>
-                                        <th class="border-bottom-0">
-                                            <h6 class="fw-semibold mb-0">Criado por</h6>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($documents as $document)
-                                    <tr>
-                                        <td>{{ $document->id }}</td>
-                                        <td>{{ $document->filename }}</td>
-                                        <td>{{ $document->user->name }}</td>
-                                        <!-- outros campos do documento -->
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-
-                            </table>
+                        @if(session('success'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('success') }}
                         </div>
+                        @endif
+
+                        <h5 class="card-title">Compartilhar Documento</h5>
+                        <form action="{{ route('documents.processShare', ['id' => $document->id]) }}" method="POST">
+                            @csrf
+
+                            <div class="mb-3">
+                                <label for="users" class="form-label">Usuários</label>
+                                <select id="users" name="users[]" class="form-select" multiple>
+                                    @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @foreach ($users as $user)
+                            @php
+                            $userPermissions = $user->documentPermissions($document->id)->first();
+                            $canView = $userPermissions ? $userPermissions->permissions->can_view : false;
+                            $canEdit = $userPermissions ? $userPermissions->permissions->can_edit : false;
+                            $canDelete = $userPermissions ? $userPermissions->permissions->can_delete : false;
+                            @endphp
+                            <div id="permissions_{{ $user->id }}_wrapper" class="permissions-wrapper" style="display: none;">
+                                <div class="mb-3">
+                                    <label class="form-label">Permissões para {{ $user->name }}</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_view" name="permissions[{{ $user->id }}][]" value="can_view" @if($canView) checked @endif>
+                                        <label class="form-check-label" for="can_view">Visualizar</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_edit" name="permissions[{{ $user->id }}][]" value="can_edit" @if($canEdit) checked @endif>
+                                        <label class="form-check-label" for="can_edit">Editar</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_delete" name="permissions[{{ $user->id }}][]" value="can_delete" @if($canDelete) checked @endif>
+                                        <label class="form-check-label" for="can_delete">Excluir</label>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                            <button type="submit" class="btn btn-primary">Compartilhar</button>
+                        </form>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -124,14 +141,38 @@
         // Obtém a URL atual
         var currentUrl = window.location.pathname;
 
-        // Verifica se a URL corresponde à página do Dashboard
-        if (currentUrl === "/") {
+        // Verifica se a URL corresponde à página de edição de documentos
+        if (currentUrl.match(/^\/documents\/\d+\/share$/)) {
+            // Obtém o ID do documento da URL
+            var documentId = currentUrl.match(/\d+/)[0];
+
             // Obtém o elemento do menu do Dashboard
-            var dashboardItem = document.querySelector('.sidebar-item a[href="/"]');
+            var dashboardItem = document.querySelector('.sidebar-item a[href="/documents/share"]');
 
             // Adiciona a classe "active" ao elemento
-            dashboardItem.classList.add('active');
+            if (dashboardItem) {
+                dashboardItem.classList.add('active');
+            }
         }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var usersSelect = document.getElementById('users');
+            var permissionsWrappers = document.getElementsByClassName('permissions-wrapper');
+
+            usersSelect.addEventListener('change', function() {
+                for (var i = 0; i < permissionsWrappers.length; i++) {
+                    permissionsWrappers[i].style.display = 'none';
+                }
+
+                var selectedUsers = Array.from(usersSelect.selectedOptions, option => option.value);
+                selectedUsers.forEach(function(userId) {
+                    var wrapper = document.getElementById('permissions_' + userId + '_wrapper');
+                    wrapper.style.display = 'block';
+                });
+            });
+        });
     </script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">

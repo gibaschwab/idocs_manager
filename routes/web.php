@@ -7,6 +7,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentEditController;
+use App\Http\Controllers\NewDocumentController;
+use App\Http\Controllers\ShareDocumentController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -47,13 +50,17 @@ Route::get('/create', [HomeController::class, 'createDocument'])->name('document
 
 Route::get('/edit-document', [HomeController::class, 'editDocument'])->name('document.edit');
 Route::get('/documents/{id}/edit', [DocumentEditController::class, 'edit'])->name('document.edit');
-// Route::put('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
+
 Route::put('/documents/{id}', [DocumentController::class, 'update'])->name('documents.update');
 Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
 Route::get('/documents/create', [DocumentController::class, 'create'])->name('document.create');
 
 Route::get('/documents/create', [NewDocumentController::class, 'create'])->name('newdocument.create');
 Route::post('/documents', [NewDocumentController::class, 'store'])->name('newdocument.store');
+
+Route::get('/documents/share', [ShareDocumentController::class, 'index'])->name('documents.share.index');
+Route::get('/documents/{id}/share', [ShareDocumentController::class, 'create'])->name('documents.share');
+Route::post('/documents/{id}/share', [ShareDocumentController::class, 'store'])->name('documents.processShare');
 
 // Route::get('/', function () {
 //     return view('welcome');

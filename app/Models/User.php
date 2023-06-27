@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Document;
 
 class User extends Authenticatable
 {
@@ -32,6 +34,16 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function documentPermissions($documentId)
+    {
+        return $this->belongsToMany(Document::class, 'document_permissions')
+            ->wherePivot('document_id', $documentId)
+            ->withPivot('can_view', 'can_edit', 'can_delete')
+            ->as('permissions')
+            ->withTimestamps();
+    }
+
 
     /**
      * The attributes that should be cast.

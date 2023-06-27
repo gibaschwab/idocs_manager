@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>iDocs</title>
     <link rel="stylesheet" href="{{ asset('css/styles.min.css') }}">
+
+    <script src="https://cdn.tiny.cloud/1/v6hb3iqv4rdjxqj5v3mfsgx7ip8ckrj6ei5e3oci9ijcymtb/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 
 <body>
@@ -54,7 +56,7 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="/documents/share" aria-expanded="false">
+                            <a class="sidebar-link" href="/3" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-share"></i>
                                 </span>
@@ -85,35 +87,30 @@
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title fw-semibold mb-4">Upload de Documento</h5>
-                        <div class="table-responsive">
-                            <table class="table text-nowrap mb-0 align-middle">
-                                <thead class="text-dark fs-4">
-                                    <tr>
-                                        <th class="border-bottom-0">
-                                            <h6 class="fw-semibold mb-0">ID</h6>
-                                        </th>
-                                        <th class="border-bottom-0">
-                                            <h6 class="fw-semibold mb-0">Nome do Documento</h6>
-                                        </th>
-                                        <th class="border-bottom-0">
-                                            <h6 class="fw-semibold mb-0">Criado por</h6>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($documents as $document)
-                                    <tr>
-                                        <td>{{ $document->id }}</td>
-                                        <td>{{ $document->filename }}</td>
-                                        <td>{{ $document->user->name }}</td>
-                                        <!-- outros campos do documento -->
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-
-                            </table>
+                        @if(session('success'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('success') }}
                         </div>
+                        @endif
+
+                        <form action="{{ route('newdocument.store') }}" method="POST">
+
+                            @csrf
+
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Título do Documento</label>
+                                <input type="text" class="form-control" name="filename" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{ old('filename') }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="docx-content">Conteúdo do Documento</label>
+                                <textarea id="docx-content" name="content" class="form-control" rows="8">{{ old('content') }}</textarea>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                <button type="submit" class="btn btn-primary">Criar Documento</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -125,16 +122,40 @@
         var currentUrl = window.location.pathname;
 
         // Verifica se a URL corresponde à página do Dashboard
-        if (currentUrl === "/") {
+        if (currentUrl === "/documents/create") {
             // Obtém o elemento do menu do Dashboard
-            var dashboardItem = document.querySelector('.sidebar-item a[href="/"]');
+            var dashboardItem = document.querySelector('.sidebar-item a[href="/edit-document"]');
 
             // Adiciona a classe "active" ao elemento
             dashboardItem.classList.add('active');
         }
     </script>
 
+
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [{
+                    value: 'First.Name',
+                    title: 'First Name'
+                },
+                {
+                    value: 'Email',
+                    title: 'Email'
+                }
+            ]
+        });
+    </script>
+
+
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
+    <!-- Include the Quill library -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
 </body>
 

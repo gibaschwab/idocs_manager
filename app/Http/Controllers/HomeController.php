@@ -22,11 +22,24 @@ class HomeController extends Controller
         return view('create-document');
     }
 
-    public function editDocument()
+    public function editDocumentbk()
     {
         $documents = Document::where('user_id', auth()->user()->id)->get();
 
         return view('edit-document', compact('documents'));
     }
 
+    public function editDocument()
+    {
+        $userId = auth()->user()->id;
+
+        $documents = Document::where('user_id', $userId)
+            ->orWhereHas('permissions', function ($query) use ($userId) {
+                $query->where('user_id', $userId)
+                    ->where('can_edit', 1);
+            })
+            ->get();
+
+        return view('edit-document', compact('documents'));
+    }
 }
