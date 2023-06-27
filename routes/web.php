@@ -9,6 +9,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentEditController;
 use App\Http\Controllers\NewDocumentController;
 use App\Http\Controllers\ShareDocumentController;
+use App\Http\Controllers\DocumentSearchController;
 
 
 /*
@@ -47,8 +48,8 @@ Route::get('/upload', [DocumentController::class, 'create'])->name('upload.creat
 Route::post('/upload', [DocumentController::class, 'store'])->name('upload.store');
 
 Route::get('/create', [HomeController::class, 'createDocument'])->name('document.create');
-
 Route::get('/edit-document', [HomeController::class, 'editDocument'])->name('document.edit');
+
 Route::get('/documents/{id}/edit', [DocumentEditController::class, 'edit'])->name('document.edit');
 
 Route::put('/documents/{id}', [DocumentController::class, 'update'])->name('documents.update');
@@ -61,6 +62,9 @@ Route::post('/documents', [NewDocumentController::class, 'store'])->name('newdoc
 Route::get('/documents/share', [ShareDocumentController::class, 'index'])->name('documents.share.index');
 Route::get('/documents/{id}/share', [ShareDocumentController::class, 'create'])->name('documents.share');
 Route::post('/documents/{id}/share', [ShareDocumentController::class, 'store'])->name('documents.processShare');
+
+Route::get('/documents/search', [DocumentSearchController::class, 'search'])->name('documents.search');
+
 
 // Route::get('/', function () {
 //     return view('welcome');
