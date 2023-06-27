@@ -12,3 +12,6 @@ php artisan key:generate
 php artisan migrate
 
 php artisan serve
+
+vídeo mostrando as funcionalidades do projeto:
+https://drive.google.com/file/d/1hJPKtgbe1r4IgSYZvvFRtzIRxn7e1O0-/view?usp=sharing
