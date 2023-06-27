@@ -3,34 +3,40 @@
 @section('content')
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title fw-semibold mb-4">Upload de Documento</h5>
-        <div class="table-responsive">
-            <table class="table text-nowrap mb-0 align-middle">
-                <thead class="text-dark fs-4">
-                    <tr>
-                        <th class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">ID</h6>
-                        </th>
-                        <th class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">Nome do Documento</h6>
-                        </th>
-                        <th class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">Criado por</h6>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($documents as $document)
-                    <tr>
-                        <td>{{ $document->id }}</td>
-                        <td>{{ $document->filename }}</td>
-                        <td>{{ $document->user->name }}</td>
-                        <!-- outros campos do documento -->
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <h5 class="card-title fw-semibold mb-4">Dashboard</h5>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="fw-semibold mb-0">Usuários Cadastrados</h4>
+                        <h1 class="fw-semibold mb-0">{{ $usersCount }}</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="fw-semibold mb-0">Meus Documentos</h4>
+                        <h1 class="fw-semibold mb-0">{{ $documentCount }}</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="fw-semibold mb-0">Compartilhados comigo</h4>
+                        <h1 class="fw-semibold mb-0">{{ $documentShareCount }}</h1>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
+
+
+
     </div>
 </div>
 
