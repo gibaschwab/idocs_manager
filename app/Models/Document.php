@@ -26,9 +26,18 @@ class Document extends Model
             ->withTimestamps();
     }
 
-
     public function permissions()
     {
         return $this->hasMany(DocumentPermission::class);
+    }
+
+    public function canDelete2()
+    {
+        return $this->user_id == auth()->id() || $this->permissions->contains('can_delete', true);
+    }
+
+    public function canDelete()
+    {
+        return $this->user_id == auth()->id() || $this->permissions->where('user_id', auth()->id())->contains('can_delete', true);
     }
 }

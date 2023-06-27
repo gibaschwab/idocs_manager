@@ -85,6 +85,11 @@
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-body">
+                        @if(session('success'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('success') }}
+                        </div>
+                        @endif
                         <h5 class="card-title fw-semibold mb-4">Consulta de Documentos</h5>
                         <div class="mb-4">
                             <form action="{{ route('documents.search') }}" method="GET">
@@ -142,7 +147,15 @@
                                         <td>{{ $document->user->name }}</td>
                                         <td>{{ $document->created_at->format('d/m/Y') }}</td>
                                         <!-- <td>{{ $document->created_at }}</td> -->
-                                        <!-- outros campos do documento -->
+                                        <td>
+                                            @if ($document->canDelete())
+                                            <form action="{{ route('documents.destroy', $document->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este documento?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger">Excluir</button>
+                                            </form>
+                                            @endif
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -169,6 +182,13 @@
             dashboardItem.classList.add('active');
         }
     </script>
+
+    <script>
+        function confirmDelete() {
+            return confirm("Tem certeza que deseja excluir este documento?");
+        }
+    </script>
+
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
 

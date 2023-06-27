@@ -54,6 +54,6 @@ class ShareDocumentController extends Controller
             );
         }
 
-        return redirect()->route('documents.share.index')->with('success', 'Documento compartilhado com sucesso!');
+        return redirect()->back()->with('success', 'Documento compartilhado com sucesso!');
     }
 }

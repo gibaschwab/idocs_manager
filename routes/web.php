@@ -65,6 +65,8 @@ Route::post('/documents/{id}/share', [ShareDocumentController::class, 'store'])-
 
 Route::get('/documents/search', [DocumentSearchController::class, 'search'])->name('documents.search');
 
+Route::delete('/documents/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+
 
 // Route::get('/', function () {
 //     return view('welcome');

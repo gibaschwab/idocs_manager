@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\Settings;
 use App\Models\Document;
+use App\Models\DocumentPermission;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Html2Text\Html2Text;
+// use Illuminate\Support\Facades\Storage;
+// use Html2Text\Html2Text;
 
 
 class DocumentController extends Controller
@@ -95,5 +96,23 @@ class DocumentController extends Controller
         }
 
         return $content;
+    }
+
+    public function destroy($id)
+    {
+        $document = Document::findOrFail($id);
+
+        // Verificar se o usuário tem permissão para excluir o documento
+        if (!$document->canDelete()) {
+            abort(403, 'Acesso negado');
+        }
+
+        // Excluir os registros na tabela document_permissions relacionados ao documento
+        DocumentPermission::where('document_id', $document->id)->delete();
+
+        // Excluir o documento
+        $document->delete();
+
+        return redirect()->route('documents.search')->with('success', 'Documento excluído com sucesso');
     }
 }
